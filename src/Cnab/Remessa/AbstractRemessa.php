@@ -493,7 +493,7 @@ abstract class AbstractRemessa
             throw new \Exception('Path ' . $folder . ' não possui permissao de escrita');
         }
 
-        $string = $this->gerar();
+        $string = iconv("UTF-8", "WINDOWS-1252",$this->gerar());
         file_put_contents($path, $string);
 
         return $path;
