@@ -784,7 +784,10 @@ final class Util
 
         $toSplice = $array;
 
-        return trim(implode('', array_splice($toSplice, $i, $t)));
+        if($toSplice != null)
+            return trim(implode('', array_splice($toSplice, $i, $t)));
+        else
+            return;
     }
 
     /**
