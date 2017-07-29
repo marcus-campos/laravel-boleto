@@ -62,7 +62,7 @@
             <tr>
                 <td>
                     <div class="titulo">(+) Mora / Multa</div>
-                    <div class="conteudo">{{ $mora_multa }}</div>
+                    <div class="conteudo">{{ $multa }}</div>
                 </td>
             </tr>
             <tr>
