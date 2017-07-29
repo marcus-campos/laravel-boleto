@@ -8,7 +8,7 @@
             <tr>
                 <td>
                     <div class="titulo">Vencimento</div>
-                    <div class="conteudo">{{ $data_vencimento }}</div>
+                    <div class="conteudo">{{ date('d/m/Y', strtotime($data_vencimento)) }}</div>
                 </td>
             </tr>
             <tr>
