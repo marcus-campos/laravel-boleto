@@ -6,7 +6,6 @@ use Eduardokum\LaravelBoleto\Boleto\Render\Html;
 use Eduardokum\LaravelBoleto\Boleto\Render\Pdf;
 use Eduardokum\LaravelBoleto\Contracts\Pessoa as PessoaContract;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use Eduardokum\LaravelBoleto\Pessoa;
 use Eduardokum\LaravelBoleto\Util;
 
 /**
@@ -1066,7 +1065,7 @@ abstract class AbstractBoleto implements BoletoContract
      */
     public function getJurosApos()
     {
-        return $this->jurosApos;
+        return $this->jurosApos ? $this->jurosApos : false;
     }
 
     /**
@@ -1266,10 +1265,11 @@ abstract class AbstractBoleto implements BoletoContract
      *
      * @return boolean
      */
-    public function isValid()
+    public function isValid(&$messages)
     {
         foreach ($this->camposObrigatorios as $campo) {
             if (call_user_func([$this, 'get' . ucwords($campo)]) == '') {
+                $messages .= "Campo $campo está em branco";
                 return false;
             }
         }
@@ -1316,8 +1316,8 @@ abstract class AbstractBoleto implements BoletoContract
             return $this->campoCodigoBarras;
         }
 
-        if (! $this->isValid()) {
-            throw new \Exception('Campos requeridos pelo banco, aparentam estar ausentes');
+        if (! $this->isValid($message)) {
+            throw new \Exception('Campos requeridos pelo banco, aparentam estar ausentes ' . $message);
         }
 
         $codigo = Util::numberFormatGeral($this->getCodigoBanco(), 3)
@@ -1341,7 +1341,10 @@ abstract class AbstractBoleto implements BoletoContract
     {
         $codigoBanco = $this->getCodigoBanco();
 
-        return $codigoBanco . '-' . Util::modulo11($codigoBanco);
+        $semX = [BoletoContract::COD_BANCO_CEF];
+        $x10 = in_array($codigoBanco, $semX) ? 0 : 'X';
+
+        return $codigoBanco . '-' . Util::modulo11($codigoBanco, 2, 9, 0, $x10);
     }
 
     /**
@@ -1475,15 +1478,15 @@ abstract class AbstractBoleto implements BoletoContract
                 'sacador_avalista'            =>
                     $this->getSacadorAvalista()
                         ? [
-                            'nome' => $this->getPagador()->getNome(),
-                            'endereco' => $this->getPagador()->getEndereco(),
-                            'bairro' => $this->getPagador()->getBairro(),
-                            'cep' => $this->getPagador()->getCep(),
-                            'uf' => $this->getPagador()->getUf(),
-                            'cidade' => $this->getPagador()->getCidade(),
-                            'documento' => $this->getPagador()->getDocumento(),
-                            'nome_documento' => $this->getPagador()->getNomeDocumento(),
-                            'endereco2' => $this->getPagador()->getCepCidadeUf(),
+                            'nome' => $this->getSacadorAvalista()->getNome(),
+                            'endereco' => $this->getSacadorAvalista()->getEndereco(),
+                            'bairro' => $this->getSacadorAvalista()->getBairro(),
+                            'cep' => $this->getSacadorAvalista()->getCep(),
+                            'uf' => $this->getSacadorAvalista()->getUf(),
+                            'cidade' => $this->getSacadorAvalista()->getCidade(),
+                            'documento' => $this->getSacadorAvalista()->getDocumento(),
+                            'nome_documento' => $this->getSacadorAvalista()->getNomeDocumento(),
+                            'endereco2' => $this->getSacadorAvalista()->getCepCidadeUf(),
                         ]
                         : [],
                 'pagador'                     => [
