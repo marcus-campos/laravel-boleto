@@ -117,10 +117,12 @@
             <div class="conteudo">{{ $instrucoes[2] }}</div>
             <div class="conteudo">{{ $instrucoes[3] }}</div>
         </td>
+        @if($multa > 0.00)
         <td>
             <div class="titulo">(+) Mora / Multa</div>
             <div class="conteudo rtl"></div>
         </td>
+        @elseif
     </tr>
     <tr>
         <td colspan="7" class="notopborder">
