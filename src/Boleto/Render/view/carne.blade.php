@@ -60,12 +60,12 @@
                 </td>
             </tr>
             <tr>
-                <td>
                 @if($multa > 0.00)
+                <td>
                     <div class="titulo">(+) Mora / Multa</div>
                     <div class="conteudo">{{ $multa }}</div>
-                @endif
                 </td>
+                @endif
             </tr>
             <tr>
                 <td>
